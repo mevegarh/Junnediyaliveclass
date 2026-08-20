@@ -2,230 +2,597 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>StudyBridge</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>StudyBridge v4</title>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}
-header{background:#111827;color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
-.logo{font-size:22px;font-weight:800}.container{max-width:1050px;margin:auto;padding:20px}
-.card{background:#fff;border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 8px 25px #0000000d}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-button{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer;background:#2563eb;color:white}
-.secondary{background:#e5e7eb;color:#111827!important}.danger{background:#dc2626}
-input,select,textarea{width:100%;padding:12px;border:1px solid #d1d5db;border-radius:10px;margin:7px 0 14px;font:inherit}
-.hidden{display:none!important}.muted{color:#6b7280}
-.subject{padding:18px;border:1px solid #e5e7eb;border-radius:14px;cursor:pointer;background:white}
-.subject:hover{border-color:#2563eb}.live{display:inline-block;background:#dc2626;color:white;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
-.ready{display:inline-block;background:#e5e7eb;color:#374151;padding:5px 9px;border-radius:20px;font-size:11px;font-weight:800}
-.video{background:#111827;color:#fff;border-radius:16px;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative}
-.video .label{position:absolute;top:14px;left:14px}.play{font-size:50px}
-.row{display:flex;gap:10px}.row>*{flex:1}.chat{max-height:230px;overflow:auto;border:1px solid #e5e7eb;border-radius:12px;padding:12px}
-.msg{padding:8px 0;border-bottom:1px solid #eee}.notice{padding:12px;border-radius:10px;background:#eff6ff;margin:10px 0}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f7fb;
+    color:#172033;
+}
+
+header{
+    background:#111827;
+    color:white;
+    padding:18px;
+    text-align:center;
+}
+
+header h1{
+    font-size:25px;
+}
+
+header p{
+    margin-top:5px;
+    color:#cbd5e1;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:18px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+button{
+    border:0;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+    margin:5px;
+}
+
+.primary{
+    background:#2563eb;
+    color:white;
+}
+
+.success{
+    background:#16a34a;
+    color:white;
+}
+
+.danger{
+    background:#dc2626;
+    color:white;
+}
+
+.secondary{
+    background:#e5e7eb;
+    color:#111827;
+}
+
+select{
+    width:100%;
+    padding:13px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    margin:10px 0;
+    font-size:16px;
+}
+
+video{
+    width:100%;
+    max-height:450px;
+    background:#000;
+    border-radius:12px;
+    margin-top:10px;
+}
+
+.status{
+    padding:12px;
+    background:#eef2ff;
+    border-radius:10px;
+    margin:10px 0;
+}
+
+.recording{
+    border-left:5px solid #2563eb;
+    background:#f8fafc;
+    padding:15px;
+    border-radius:10px;
+    margin-top:12px;
+}
+
+.recording h3{
+    margin-bottom:5px;
+}
+
+.recording small{
+    color:#64748b;
+}
+
+.empty{
+    text-align:center;
+    color:#64748b;
+    padding:20px;
+}
+
+.hidden{
+    display:none;
+}
+
+.role-buttons{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    background:#dbeafe;
+    color:#1d4ed8;
+    border-radius:20px;
+    font-size:12px;
+    margin-top:5px;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    color:#64748b;
+}
 </style>
 </head>
+
 <body>
-<header><div class="logo">📚 StudyBridge</div><div id="roleBadge">School Live Learning</div></header>
+
+<header>
+    <h1>📚 StudyBridge v4</h1>
+    <p>Live Classes • Recordings • Learning</p>
+</header>
+
 <div class="container">
 
-<section id="login" class="card">
-<h1>Welcome to StudyBridge 👋</h1>
-<p class="muted">A school live-class platform for teachers and students.</p>
-<label>Name</label><input id="name" placeholder="Enter your name">
-<label>Login as</label>
-<select id="role"><option value="student">Student</option><option value="teacher">Teacher</option></select>
-<button onclick="login()">Continue →</button>
-</section>
+    <!-- ROLE SELECTION -->
+    <div class="card" id="roleCard">
+        <h2>Choose Your Role</h2>
 
-<!-- TEACHER -->
-<section id="teacherHome" class="hidden">
-<div class="card"><h2>Teacher Dashboard</h2><p class="muted">Choose the subject you are going to teach.</p></div>
-<div class="grid" id="teacherSubjects"></div>
-</section>
+        <div class="role-buttons">
+            <button class="primary" onclick="showTeacher()">
+                👨‍🏫 Teacher
+            </button>
 
-<section id="teacherSubject" class="hidden">
-<div class="card">
-<button class="secondary" onclick="teacherBack()">← Subjects</button>
-<h2 id="teacherSubjectTitle"></h2>
-<p class="muted">Teacher: <span id="teacherName"></span></p>
-<div id="teacherStatus" class="notice">Class is not live.</div>
-<button id="liveButton" onclick="toggleLive()">🔴 Start Live Streaming</button>
-</div>
-<div id="teacherLivePanel" class="card hidden">
-<h3>🎥 Live Classroom</h3>
-<div class="video"><div class="label live">● LIVE</div><video id="teacherCamera" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;border-radius:16px;background:#000"></video></div>
-<p class="muted">Camera/microphone preview placeholder. Connect a secure live-stream service for real video.</p>
-<h3>Class Chat</h3>
-<div id="teacherChat" class="chat"><div class="msg"><b>System:</b> Students can now join this live class.</div></div>
-</div>
-</section>
+            <button class="secondary" onclick="showStudent()">
+                👨‍🎓 Student
+            </button>
+        </div>
+    </div>
 
-<!-- STUDENT -->
-<section id="studentHome" class="hidden">
-<div class="card"><h2 id="studentWelcome"></h2><p class="muted">Choose a subject. A 🔴 LIVE subject can be attended now.</p></div>
-<div class="grid" id="studentSubjects"></div>
-</section>
 
-<section id="studentClass" class="hidden">
-<div class="card">
-<button class="secondary" onclick="studentBack()">← Subjects</button>
-<h2 id="studentSubjectTitle"></h2>
-<div id="studentLiveStatus"></div>
-<div id="studentVideo" class="video hidden"><div class="label live">● LIVE CLASS</div><div class="play">▶</div></div>
-<div id="notLive" class="notice hidden">This class is not live right now. Please check again later.</div>
+    <!-- TEACHER PANEL -->
+    <div class="card hidden" id="teacherPanel">
+
+        <h2>👨‍🏫 Teacher Dashboard</h2>
+
+        <label>Select Subject</label>
+
+        <select id="subject">
+            <option>English</option>
+            <option>Maths</option>
+            <option>Science</option>
+            <option>Social Science</option>
+            <option>Other Subject</option>
+        </select>
+
+        <div class="status" id="teacherStatus">
+            ⚪ Class is not live
+        </div>
+
+        <video
+            id="camera"
+            autoplay
+            muted
+            playsinline
+            class="hidden">
+        </video>
+
+        <div>
+            <button
+                class="success"
+                id="startBtn"
+                onclick="startClass()">
+                🔴 Start Live Streaming
+            </button>
+
+            <button
+                class="danger hidden"
+                id="stopBtn"
+                onclick="stopClass()">
+                ⏹️ Stop Live Streaming
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- STUDENT PANEL -->
+    <div class="card hidden" id="studentPanel">
+
+        <h2>👨‍🎓 Student Dashboard</h2>
+
+        <div class="status">
+            📡 Live Classes
+        </div>
+
+        <div id="liveStatus">
+            No class is currently live.
+        </div>
+
+    </div>
+
+
+    <!-- RECORDED CLASSES -->
+    <div class="card">
+
+        <h2>🎥 Recorded Classes</h2>
+
+        <div id="recordings">
+            <div class="empty">
+                No recorded classes yet.
+            </div>
+        </div>
+
+    </div>
+
 </div>
-<div id="studentTools" class="grid hidden">
-<div class="card"><h3>💬 Ask a Doubt</h3><textarea id="doubt" rows="4" placeholder="Type your question..."></textarea><button onclick="sendDoubt()">Send Doubt</button></div>
-<div class="card"><h3>📝 Class Chat</h3><div id="studentChat" class="chat"></div><br><div class="row"><input id="message" placeholder="Write a message..."><button onclick="sendMessage()">Send</button></div></div>
-</div>
-</section>
-</div>
+
+<footer>
+    StudyBridge v4 © 2026
+</footer>
+
 
 <script>
-const subjects=["English","Maths","Science","SS","Other"];
-let user="",role="",currentSubject="",teacherStream=null;
 
-async function startBackCamera(){
-  const video=document.getElementById("teacherCamera");
-  if(!video) return;
-  try{
-    teacherStream=await navigator.mediaDevices.getUserMedia({
-      video:{facingMode:{ideal:"environment"}},
-      audio:true
+let mediaStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+
+let recordings = JSON.parse(
+    localStorage.getItem("studybridgeRecordings") || "[]"
+);
+
+
+/* =========================
+   ROLE FUNCTIONS
+========================= */
+
+function showTeacher(){
+
+    document.getElementById("teacherPanel")
+        .classList.remove("hidden");
+
+    document.getElementById("studentPanel")
+        .classList.add("hidden");
+}
+
+
+function showStudent(){
+
+    document.getElementById("studentPanel")
+        .classList.remove("hidden");
+
+    document.getElementById("teacherPanel")
+        .classList.add("hidden");
+
+    updateLiveStatus();
+}
+
+
+/* =========================
+   START LIVE CLASS
+========================= */
+
+async function startClass(){
+
+    const subject =
+        document.getElementById("subject").value;
+
+    try{
+
+        /*
+        Prefer the BACK CAMERA.
+        On phones, facingMode: environment
+        requests the rear camera.
+        */
+
+        mediaStream = await navigator.mediaDevices
+            .getUserMedia({
+                video:{
+                    facingMode:{
+                        ideal:"environment"
+                    }
+                },
+                audio:true
+            });
+
+        const camera =
+            document.getElementById("camera");
+
+        camera.srcObject = mediaStream;
+        camera.classList.remove("hidden");
+
+        recordedChunks = [];
+
+        mediaRecorder =
+            new MediaRecorder(mediaStream);
+
+        mediaRecorder.ondataavailable = function(event){
+
+            if(event.data.size > 0){
+                recordedChunks.push(event.data);
+            }
+
+        };
+
+        mediaRecorder.onstop = function(){
+
+            saveRecording(subject);
+
+        };
+
+        mediaRecorder.start();
+
+        localStorage.setItem(
+            "studybridgeLive",
+            JSON.stringify({
+                live:true,
+                subject:subject
+            })
+        );
+
+        document.getElementById("teacherStatus")
+            .innerHTML =
+            "🔴 <b>LIVE:</b> " + subject;
+
+        document.getElementById("startBtn")
+            .classList.add("hidden");
+
+        document.getElementById("stopBtn")
+            .classList.remove("hidden");
+
+        updateLiveStatus();
+
+    }
+    catch(error){
+
+        alert(
+            "Camera/Microphone permission is required.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================
+   STOP LIVE CLASS
+========================= */
+
+function stopClass(){
+
+    if(!mediaRecorder) return;
+
+    mediaRecorder.stop();
+
+    if(mediaStream){
+
+        mediaStream.getTracks().forEach(
+            track => track.stop()
+        );
+
+    }
+
+    document.getElementById("camera")
+        .classList.add("hidden");
+
+    document.getElementById("startBtn")
+        .classList.remove("hidden");
+
+    document.getElementById("stopBtn")
+        .classList.add("hidden");
+
+    document.getElementById("teacherStatus")
+        .innerHTML =
+        "🟢 Class finished — saving recording...";
+
+    localStorage.removeItem("studybridgeLive");
+
+    updateLiveStatus();
+
+}
+
+
+/* =========================
+   SAVE RECORDING
+========================= */
+
+function saveRecording(subject){
+
+    const blob =
+        new Blob(
+            recordedChunks,
+            {type:"video/webm"}
+        );
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const recording = {
+
+        id:Date.now(),
+
+        subject:subject,
+
+        date:new Date()
+            .toLocaleString(),
+
+        url:url
+
+    };
+
+    recordings.push(recording);
+
+    /*
+    Store metadata locally.
+    The video Blob itself remains available
+    during this page session.
+    */
+
+    localStorage.setItem(
+        "studybridgeRecordings",
+        JSON.stringify(
+            recordings.map(r => ({
+                id:r.id,
+                subject:r.subject,
+                date:r.date
+            }))
+        )
+    );
+
+    displayRecordings();
+
+    document.getElementById("teacherStatus")
+        .innerHTML =
+        "✅ Class finished and added to Recorded Classes.";
+
+}
+
+
+/* =========================
+   DISPLAY RECORDINGS
+========================= */
+
+function displayRecordings(){
+
+    const box =
+        document.getElementById("recordings");
+
+    if(recordings.length === 0){
+
+        box.innerHTML =
+            '<div class="empty">' +
+            'No recorded classes yet.' +
+            '</div>';
+
+        return;
+    }
+
+    box.innerHTML = "";
+
+    recordings.slice().reverse()
+        .forEach(function(recording){
+
+        const div =
+            document.createElement("div");
+
+        div.className = "recording";
+
+        div.innerHTML = `
+
+            <h3>📚 ${recording.subject}</h3>
+
+            <span class="badge">
+                Recorded Class
+            </span>
+
+            <br><br>
+
+            <small>
+                ${recording.date}
+            </small>
+
+            ${
+                recording.url
+                ?
+                `<video
+                    controls
+                    src="${recording.url}">
+                </video>`
+                :
+                `<p>
+                    Recording is available only
+                    in the current session.
+                </p>`
+            }
+
+        `;
+
+        box.appendChild(div);
+
     });
-    video.srcObject=teacherStream;
-    video.play();
-  }catch(err){
-    alert("Camera/microphone permission is required to start the live class. Please allow access in your browser.");
-    console.error(err);
-  }
-}
-function stopBackCamera(){
-  if(teacherStream){
-    teacherStream.getTracks().forEach(track=>track.stop());
-    teacherStream=null;
-  }
-  const video=document.getElementById("teacherCamera");
-  if(video) video.srcObject=null;
+
 }
 
-function getLive(){
- try{return JSON.parse(localStorage.getItem("studybridge_live")||"{}")}catch(e){return {}}
-}
-function setLive(subject,teacher,isLive){
- localStorage.setItem("studybridge_live",JSON.stringify({subject,teacher,isLive,time:Date.now()}));
-}
-function login(){
- user=document.getElementById("name").value.trim()||"User";
- role=document.getElementById("role").value;
- document.getElementById("login").classList.add("hidden");
- if(role==="teacher"){showTeacherHome()}else{showStudentHome()}
-}
-function showTeacherHome(){
- document.getElementById("teacherHome").classList.remove("hidden");
- document.getElementById("roleBadge").textContent="Teacher";
- document.getElementById("teacherSubjects").innerHTML=subjects.map(s=>`
- <div class="subject" onclick="openTeacherSubject('${s}')">
- <h3>📘 ${s}</h3><p class="muted">Open subject →</p></div>`).join("");
-}
-function openTeacherSubject(s){
- currentSubject=s;
- document.getElementById("teacherHome").classList.add("hidden");
- document.getElementById("teacherSubject").classList.remove("hidden");
- document.getElementById("teacherSubjectTitle").textContent=s;
- document.getElementById("teacherName").textContent=user;
- refreshTeacher();
-}
-function refreshTeacher(){
- const live=getLive(), active=live.isLive&&live.subject===currentSubject;
- document.getElementById("teacherStatus").textContent=active?"🔴 Your "+currentSubject+" class is LIVE. Students can attend now.":"Class is not live.";
- const b=document.getElementById("liveButton");
- b.textContent=active?"⏹ Stop Live Streaming":"🔴 Start Live Streaming";
- b.className=active?"danger":"";
- document.getElementById("teacherLivePanel").classList.toggle("hidden",!active);
-}
-async function toggleLive(){
- const live=getLive();
- const active=live.isLive&&live.subject===currentSubject;
- if(active){
-   setLive(currentSubject,user,false);
-   stopBackCamera();
- }else{
-   await startBackCamera();
-   if(!teacherStream) return;
-   setLive(currentSubject,user,true);
- }
- refreshTeacher();
-}
-function teacherBack(){
- stopBackCamera();
- const live=getLive();
- if(live.subject===currentSubject && live.isLive) setLive(currentSubject,user,false);
- document.getElementById("teacherSubject").classList.add("hidden");
- document.getElementById("teacherHome").classList.remove("hidden");
-}
-function showStudentHome(){
- document.getElementById("studentHome").classList.remove("hidden");
- document.getElementById("roleBadge").textContent="Student";
- document.getElementById("studentWelcome").textContent="Hello, "+user+" 👋";
- renderStudentSubjects();
-}
-function renderStudentSubjects(){
- const live=getLive();
- document.getElementById("studentSubjects").innerHTML=subjects.map(s=>{
-   const active=live.isLive&&live.subject===s;
-   return `<div class="subject" onclick="openStudentSubject('${s}')">
-     ${active?'<span class="live">● LIVE NOW</span>':'<span class="ready">OFFLINE</span>'}
-     <h3>📘 ${s}</h3><p class="muted">${active?"Click to attend the live class":"No live class right now"}</p>
-   </div>`
- }).join("");
-}
-function openStudentSubject(s){
- currentSubject=s;
- document.getElementById("studentHome").classList.add("hidden");
- document.getElementById("studentClass").classList.remove("hidden");
- document.getElementById("studentSubjectTitle").textContent=s+" Class";
- refreshStudent();
-}
-function refreshStudent(){
- const live=getLive(), active=live.isLive&&live.subject===currentSubject;
- document.getElementById("studentLiveStatus").innerHTML=active?
- `<div class="notice">🔴 <b>LIVE:</b> ${escapeHtml(live.teacher)} is teaching ${currentSubject}. You can attend now.</div>`:
- `<div class="notice">ℹ️ No ${currentSubject} live class is running at the moment.</div>`;
- document.getElementById("studentVideo").classList.toggle("hidden",!active);
- document.getElementById("studentTools").classList.toggle("hidden",!active);
- document.getElementById("notLive").classList.toggle("hidden",active);
-}
-function studentBack(){
- document.getElementById("studentClass").classList.add("hidden");
- document.getElementById("studentHome").classList.remove("hidden");
- renderStudentSubjects();
-}
-function addChat(text){
- document.getElementById("studentChat").innerHTML+=`<div class="msg">${text}</div>`;
-}
-function sendDoubt(){
- const x=document.getElementById("doubt"),t=x.value.trim();if(!t)return;
- addChat("<b>"+escapeHtml(user)+" (Doubt):</b> "+escapeHtml(t));x.value="";
-}
-function sendMessage(){
- const x=document.getElementById("message"),t=x.value.trim();if(!t)return;
- addChat("<b>"+escapeHtml(user)+":</b> "+escapeHtml(t));x.value="";
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
 
-window.addEventListener("storage",()=>{
- if(role==="student"){
-   if(!document.getElementById("studentHome").classList.contains("hidden"))renderStudentSubjects();
-   if(!document.getElementById("studentClass").classList.contains("hidden"))refreshStudent();
- }
- if(role==="teacher"&&!document.getElementById("teacherSubject").classList.contains("hidden"))refreshTeacher();
-});
-setInterval(()=>{
- if(role==="student"){
-   if(!document.getElementById("studentHome").classList.contains("hidden"))renderStudentSubjects();
-   if(!document.getElementById("studentClass").classList.contains("hidden"))refreshStudent();
- }
-},1000);
+/* =========================
+   LIVE STATUS
+========================= */
+
+function updateLiveStatus(){
+
+    const live =
+        JSON.parse(
+            localStorage.getItem("studybridgeLive")
+            || "null"
+        );
+
+    const box =
+        document.getElementById("liveStatus");
+
+    if(!box) return;
+
+    if(live && live.live){
+
+        box.innerHTML = `
+            <div class="status">
+                🔴 <b>LIVE NOW</b><br><br>
+                Subject: ${live.subject}
+                <br><br>
+                👨‍🏫 Teacher is currently
+                taking the class.
+            </div>
+        `;
+
+    }else{
+
+        box.innerHTML =
+            "No class is currently live.";
+
+    }
+
+}
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+displayRecordings();
+updateLiveStatus();
+
 </script>
+
 </body>
 </html>
